@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-reverse
+  labels:
+    app: service-reverse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-reverse
+  template:
+    metadata:
+      labels:
+        app: service-reverse
+    spec:
+      containers:
+      - name: service-reverse
+        image: nginx
+        volumes:
+          - ./reverse-proxy/nginx.conf:/etc/nginx/nginx.conf
+        ports:
+        - containerPort: 80

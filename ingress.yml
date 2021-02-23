@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: kubernetes.docker.internal
+    http:
+        paths:
+          - path: /one(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: service-one
+                port:
+                  number: 4000
+          - path: /two(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: service-two
+                port:
+                  number: 4002
