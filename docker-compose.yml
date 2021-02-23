@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  service-one:
+    build:
+      context: ./service-one
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    networks: 
+      - test-network
+
+  service-two:
+    build:
+      context: ./service-two
+      dockerfile: Dockerfile
+      args:
+        SERVICE_ONE_URL: "http://service-one:4000"
+    ports:
+      - "4002:4002"
+    networks: 
+      - test-network
+
+  service-proxy:
+    image: nginx:latest
+    depends_on:
+      - service-one
+      - service-two
+    volumes:
+      - ./reverse-proxy/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    networks: 
+      - test-network
+  
+networks: 
+  test-network:
+    driver: bridge
